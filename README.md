@@ -118,12 +118,6 @@ Patches and fixes are included and applied automatically: texture fix, skip vide
 
 ## Building from source
 
-Windows console-save imports are available under **Game -> Saves -> Import ZIP... / Import folder...**.
-Select a decrypted export containing `sce_sys/param.sfo` and the save payloads. Its title ID
-must match the selected game; existing PC saves are backed up before slots are replaced.
-Importing is local and needs no console. This does not decrypt encrypted PlayStation USB
-backup containers. Export decrypted files with a compatible save tool first.
-
 This checkout also supports reading a PS4 PKG directly on Windows. Build the port
 with `bash build.sh`, then run `python run.py "path\to\game.pkg"`, or choose
 the PKG using Browse on the launcher's Game page. The package stays intact;

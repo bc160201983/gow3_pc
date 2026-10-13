@@ -19,7 +19,6 @@ import queue
 import re
 import runpy
 import shutil
-import struct
 import subprocess
 import sys
 import tempfile
@@ -884,43 +883,11 @@ class Launcher:
                       'Пусто: {} (там же кэш шейдеров).').format(DATA_DIR / 'user'), on_change=self.refresh_status)
         self.section(f, _('Saves'))
         self.build_save_backups(f)
-        self.build_save_import(f)
         self.section(f, _('Language'))
         self.row(f, _('Game language', 'Язык игры'), self.choice(f, 'language', 'app', LANGUAGES))
 
     def user_dir(self):
         return Path(self.var('user_dir', 'app').get() or DATA_DIR / 'user')
-
-    def build_save_import(self, f):
-        holder = self.ttk.Frame(f)
-        self.ttk.Button(holder, text=_('Import ZIP…'), command=lambda: self.import_console_saves(True)).pack(side='left')
-        self.ttk.Button(holder, text=_('Import folder…'), command=lambda: self.import_console_saves(False)).pack(side='left', padx=(6, 0))
-        self.row(f, _('Import PS4 saves'), holder,
-                 _('Choose a decrypted save export with sce_sys/param.sfo. Imported saves must match your game title ID. Current saves are backed up first.'))
-        self.note(f, _('Encrypted USB backups need a compatible save-decryption tool first. Importing decrypted files here works locally without a PS4 or PS5.'))
-
-    def import_console_saves(self, archive):
-        if self.process:
-            self.messagebox.showwarning(APP_NAME, _('Close the game before importing saves.'))
-            return
-        title_id = game_profile_of(self.var('game_dir', 'app').get())[0]
-        if not title_id:
-            self.messagebox.showwarning(APP_NAME, _('Select your game PKG or folder first.'))
-            return
-        chosen = (self.filedialog.askopenfilename(title='Choose decrypted PS4 saves', filetypes=[('Save ZIP', '*.zip')])
-                  if archive else self.filedialog.askdirectory(title='Choose decrypted PS4 saves'))
-        if not chosen:
-            return
-        if not self.messagebox.askyesno(APP_NAME, _('Import saves for {}? Matching save slots will be replaced after backing up your current saves.').format(title_id)):
-            return
-        try:
-            from save_import import import_saves
-            result = import_saves(chosen, self.user_dir(), title_id)
-        except (OSError, ValueError, zipfile.BadZipFile, struct.error) as error:
-            self.messagebox.showerror(APP_NAME, _('Could not import saves: {}').format(error))
-            return
-        self.refresh_backups()
-        self.messagebox.showinfo(APP_NAME, _('Imported {} saves. Start the game and choose Load.').format(result['count']))
 
     def build_save_backups(self, f):
         """run.py backs the saves up before every start; one of them can be restored here."""
