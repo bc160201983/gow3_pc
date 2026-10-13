@@ -38,6 +38,11 @@ Next time
   kept.
 
 Data
+- Import console saves: Game -> Saves -> Import ZIP... or Import folder... accepts decrypted
+  exports containing sce_sys/param.sfo and the game's save files. The title ID must match the
+  selected game. Existing PC saves are backed up before matching slots are replaced.
+  Importing runs locally without a console. Encrypted PlayStation USB backups must first
+  be decrypted with a compatible tool; offline console-key decryption is not included.
 - Saves, shader cache and the log: user\ next to God of War III.exe (keep it when updating).
 - Settings: gow3.ini next to God of War III.exe; launcher options in %APPDATA%\gow3-launcher.
 - Generated files (prepared game image, patches): out\.
